@@ -1,0 +1,56 @@
+import numpy as np
+import matplotlib.pyplot as plt
+g = 0
+h = 0
+eps = 0.00001
+res = [(2, 3),(-2.8, -0.5),(-2, 3), (-2.5,-2.5),(2.4, -3),(15, 19),(15,-19)]
+
+def f1(x, y):
+    return x**7 - 5*x**2*y**4 + 1510
+
+def f2(x, y):
+    return y**5 - 3*(x**4)*y - 105
+
+def df1x(x, y):
+    return 7*(x**6) - 10*x*(y**4)
+
+def df1y(x, y):
+    return -20 * (x**2) * (y ** 3)
+
+def df2x(x, y):
+    return -12*(x**3)*y
+
+def df2y(x, y):
+    return 5 * (y ** 4) - 3 * x**4
+
+print('12 Вариант 2 задание')
+print('Решить систему нелинейных уравнений методом Ньютона:')
+print('x**7 - 5*x**2*y**4 + 1510 = 0')
+print('y**5 - 3*(x**4)*y - 105 = 0')
+
+
+for x, y in res:
+    print('='*80)
+    print('x ~',x,'y ~',y,'Eps =', eps)
+    k = 0
+    while k==0 or (abs(xr[0])>eps and abs(xr[1])>eps):
+        k += 1
+        A = np.matrix([[df1x(x,y), df1y(x, y)],
+                       [df2x(x,y), df2y(x,y)]])
+        b = np.array([-f1(x,y), -f2(x,y)])
+        xr = np.linalg.solve(A,b)
+        g = xr[0]
+        h = xr[1]
+        x = x + g
+        y = y + h
+        print('Iteration',k,': x =',x,'y =',y)
+    print('f1 =',f1(x,y))
+    print('f2 =',f2(x,y))
+
+delta = 0.025
+xrange = np.arange(-10.0, 25.0, delta)
+yrange = np.arange(-25.0, 25.0, delta)
+X, Y = np.meshgrid(xrange, yrange)
+plt.contour(X, Y, f1(X, Y), [0])
+plt.contour(X, Y, f2(X, Y), [0])
+plt.show()
